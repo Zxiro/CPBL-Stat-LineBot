@@ -39,8 +39,8 @@ def callback(req : HttpRequest):
         for event in events:
             if event.source.user_id not in machine:
                 machine[event.source.user_id] = TocMachine(
-                    states = ['start', 'fsm', 'options', 'player', 'year', 'player_stat','player_name', 'att', 'def', 'team', 'team_year', 'team_stat', 
-                    'league', 'league_year', 'league_stat', 'league_yt'], 
+                    states = ['start', 'fsm', 'options', 'player', 'year', 'player_stat','player_name', 'att', 'def', 'team', 'team_stat', 
+                    'league',  'league_yt'], 
                     transitions =[
                         { #start to fsm
                             "trigger" : "advance",
@@ -70,7 +70,7 @@ def callback(req : HttpRequest):
                             "trigger" : "advance",
                             "source" : "player",
                             "dest" : "player_name",
-                            "conditions" : "going_year"
+                            "conditions" : "going_player_name"
                         },
                         { #players to year
                             "trigger" : "advance",
@@ -102,35 +102,17 @@ def callback(req : HttpRequest):
                             "dest" : "team",
                             "conditions" : "going_team"
                         },
-                        { #team to team_year
-                            "trigger" : "advance",
-                            "source" : "team",
-                            "dest" : "team_year",
-                            "conditions" : "going_team_year"
-                        },
                         { #team_year to team_stat
                             "trigger" : "advance",
-                            "source" : "team_year",
+                            "source" : "team",
                             "dest" : "team_stat",
                             "conditions" : "going_team_stat"
                         },
-                        { #team_year to team_stat
+                        { #
                             "trigger" : "advance",
                             "source" : "options",
                             "dest" : "league",
                             "conditions" : "going_league"
-                        },
-                        { #team_year to team_stat
-                            "trigger" : "advance",
-                            "source" : "league",
-                            "dest" : "league_year",
-                            "conditions" : "going_league_year"
-                        },
-                        { #team_year to team_stat
-                            "trigger" : "advance",
-                            "source" : "league_year",
-                            "dest" : "league_stat",
-                            "conditions" : "going_league_stat"
                         },
                         { #team_year to team_stat
                             "trigger" : "advance",
@@ -146,15 +128,9 @@ def callback(req : HttpRequest):
                         },
                         { #options and fsm go back to start
                             "trigger" : "advance",
-                            "source" : ["league_stat", "league_year", "league_yt"],
+                            "source" : ["league_yt"],
                             "dest" : "league",
                             "conditions" : "back_league"
-                        },
-                        { #options and fsm go back to start
-                            "trigger" : "advance",
-                            "source" : ["league_stat"],
-                            "dest" : "league_year",
-                            "conditions" : "back_league_year"
                         },
                         { #
                             "trigger" : "advance",
@@ -162,12 +138,6 @@ def callback(req : HttpRequest):
                             "dest" : "team",
                             "conditions" : "back_team"
                         },
-                        { #
-                            "trigger" : "advance",
-                            "source" : ["team_stat"],
-                            "dest" : "team_year",
-                            "conditions" : "back_team_year"
-                        }, 
                         { #att and def go back to year
                             "trigger" : "advance",
                             "source" : ["att", "def", 'player_stat'],
@@ -182,8 +152,8 @@ def callback(req : HttpRequest):
                         },                        
                         { #player, team and league go back to options
                             "trigger" : "advance",
-                            "source" : ['player', 'team', 'league', 'league_year','league_stat', 'league_yt',
-                            'year', 'player_stat','att', 'def', 'team_stat', 'team_year'],
+                            "source" : ['player', 'team', 'league','league_yt',
+                            'year', 'player_stat','att', 'def', 'team_stat'],
                             "dest" : "options",
                             "conditions" : "back_options"
                         }, 

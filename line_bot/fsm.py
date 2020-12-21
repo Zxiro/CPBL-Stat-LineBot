@@ -1,11 +1,13 @@
 import requests as req
 import pandas as pd
+import matplotlib.pyplot as plt
 from abc import ABC, abstractmethod
 from transitions.extensions import GraphMachine
 from bs4 import BeautifulSoup
 from django.conf import settings
 from linebot import LineBotApi, WebhookParser
 from linebot.models import MessageEvent, TextSendMessage, TextMessage, FlexSendMessage
+from pandas.plotting import table 
 from .utils import send_text_message, send_image_url, send_flex_message
 from .msg_temp import show_pic, main_menu, table
 
@@ -18,7 +20,6 @@ def get_player_stat(name):
     player_href = soup.find_all('a')
     get = 0
     for a in player_href:
-        #print(a)
         if(a.getText() == name): #find the html of playername
             print(a.getText())
             player_stat_herf = a.get('href')
@@ -27,7 +28,6 @@ def get_player_stat(name):
     if get == 0 :
         return 0
     else:
-        #print(player_stat_herf)
         soup = BeautifulSoup(req.get('http://www.cpbl.com.tw'+ player_stat_herf).content, 'html.parser')# Into players stat page
         tables = soup.find_all('table', {'class':'std_tb mix_x'})
         table = tables[:3]
@@ -49,11 +49,32 @@ def get_player_stat(name):
                     df.loc[i] = data
                 i += 1
                 print(df)
-                
             print(df)
             break
         print(df)
         return(df)
+
+def get_team_stat(year):
+    headers = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36 Edg/87.0.664.60'}
+    res = req.get(
+        'http://www.cpbl.com.tw/standing/year/'+year+'.html?&game_no=01&year='+year, 
+        headers = headers)
+    soup = BeautifulSoup(res.content, 'html.parser')
+    tables = soup.find_all('table', {'class':'std_tb mix_x'}) #Get three team stat table
+    stat_table  = tables[2] #Last table
+    col = ['Rank', 'Team', 'Game', 'W-T-L', 'PCT', 'GB', '富邦', 'Lamigo', '中信兄弟', '統一獅', 'Home', 'Away']
+    data = []
+    stat_data = stat_table.find_all('td', {'align':'center'})
+    df = pd.DataFrame(columns = col)
+    i = 0
+    for s in stat_data:
+        data.append(s.text)
+        if(len(data) == len(col)):
+            df.loc[i] = data
+            data = []
+            i += 1
+    print(df)        
+
 
 class TocMachine(GraphMachine):
     def __init__(self, **machine_configs):
@@ -63,11 +84,6 @@ class TocMachine(GraphMachine):
         text = event.message.text
         print('back_league', text)
         return text.lower() == 'league'
-
-    def back_league_year(self, event):
-        text = event.message.text
-        print('back_league_year', text)
-        return text.lower() == 'league_year'
 
     def back_year(self, event):
         text = event.message.text
@@ -203,27 +219,23 @@ class TocMachine(GraphMachine):
         print('enter_team', text)
         return text.lower() == 'team' 
 
-    def on_enter_team(self, event): #Choose which team
-        text = event.message.text
-        print('enter_team', text)
-        send_text_message(event.reply_token, text) 
-
-    def going_team_year(self, event):
-        text = event.message.text
-        print('enter_team_year', text)
-        return text.lower() == 'team_year' 
-
-    def on_enter_team_year(self, event): #Choose team year
-        text = event.message.text
-        print('enter_team_year', text)
-        send_text_message(event.reply_token, text)
+    def on_enter_team(self, event): #Choose which year's stat
+        send_text_message(event.reply_token, '請輸入球季年分')
+        text = event.message.text 
+        return text
 
     def going_team_stat(self, event):
         text = event.message.text
         print('enter_team_stat', text)
-        return text.lower() == 'team_stat' 
+        return True 
 
     def on_enter_team_stat(self, event): #Show team stat
+        text = event.message.text
+        print('enter_team_stat', text)
+        stat_ = get_team_stat(text)
+        if(type(stat_) == int):
+            send_text_message(event.reply_token, '請輸入正確名稱')
+            return text.lower() == 'player_name'
         text = event.message.text
         print('enter_team_stat', text)
         send_text_message(event.reply_token, text)
@@ -237,26 +249,6 @@ class TocMachine(GraphMachine):
         text = event.message.text
         print('enter_league', text)
         send_text_message(event.reply_token, text)     
-
-    def going_league_year(self, event):
-        text = event.message.text
-        print('enter_league_year', text)
-        return text.lower() == 'league_year' 
-
-    def on_enter_league_year(self, event): #Show team stat
-        text = event.message.text
-        print('enter_league_year', text)
-        send_text_message(event.reply_token, text)  
-
-    def going_league_stat(self, event):
-        text = event.message.text
-        print('enter_league_stat', text)
-        return text.lower() == 'league_stat' 
-
-    def on_enter_league_stat(self, event): #Show team stat
-        text = event.message.text
-        print('enter_league_stat', text)
-        send_text_message(event.reply_token, text)
 
     def going_league_yt(self, event):
         text = event.message.text
