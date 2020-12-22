@@ -3,13 +3,12 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from abc import ABC, abstractmethod
 from transitions.extensions import GraphMachine
-from bs4 import BeautifulSoup
 from django.conf import settings
 from linebot import LineBotApi, WebhookParser
-from linebot.models import MessageEvent, TextSendMessage, TextMessage, FlexSendMessage
+from linebot.models import MessageEvent, TextSendMessage, TextMessage, FlexSendMessage, ImageSendMessage
 from pandas.plotting import table 
 from .utils import send_text_message, send_image_url, send_flex_message, get_player_stat, get_team_stat
-from .msg_temp import show_pic, main_menu, table
+from .msg_temp import show_pic, main_menu, table, plot, show_team
 
 class TocMachine(GraphMachine):
     def __init__(self, **machine_configs):
@@ -141,21 +140,23 @@ class TocMachine(GraphMachine):
     def on_enter_team_year(self, event): #Show team stat
         text = event.message.text
         print('enter_team_year', text)
-        stat_ = get_team_stat(text)
-        stat_ = 10
+        stat_ = get_team_stat(text) #Imgur Link
+        stat_.drop(['Rank', 'PCT', 'GB', 'Home', 'Away'], inplace = True,  axis=1)
         if(type(stat_) == int):
             send_text_message(event.reply_token, '請輸入正確年份')
             return text.lower() == 'team_year'
-        
-    def going_team_stat(self, event):
-        text = event.message.text
-        print('enter_team_stat', text)
-        return text.lower() == 'team_stat' 
-
-    def on_enter_team_stat(self, event): #Show team stat
-        text = event.message.text
-        print('enter_team_stat', text)
-        return text.lower() == 'team_stat'
+        message = show_team()
+        for i in range(4):
+            tmp_list = stat_.loc[i].tolist()
+            for j in range(len(tmp_list)):
+                message["body"]["contents"][3]["contents"][0]["contents"][j]["text"] = tmp_list[j]
+        msg_to_rep = FlexSendMessage("球隊戰績", message)
+        send_flex_message(event.reply_token, msg_to_rep)
+        #message = plot()
+        #message['contents'][0]['hero']['url'] = stat_
+        #message_to_reply = ImageSendMessage(original_content_url=stat_,preview_image_url=stat_)
+        #message_to_reply = FlexSendMessage("趨勢圖-近三個月", message)
+        #send_flex_message(event.reply_token, message_to_reply)
 
     def going_league(self, event):
         text = event.message.text

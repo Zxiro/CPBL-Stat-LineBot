@@ -1,6 +1,12 @@
 import os
-
+import pyimgur
+import matplotlib.pyplot as plt
+import requests as req
+import pandas as pd
+import dataframe_image as dfi
+from bs4 import BeautifulSoup
 from django.conf import settings
+from pandas.plotting import table 
 from linebot import LineBotApi, WebhookParser
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
 
@@ -59,7 +65,7 @@ def get_team_stat(year):
     soup = BeautifulSoup(res.content, 'html.parser')
     tables = soup.find_all('table', {'class':'std_tb mix_x'}) #Get three team stat table
     stat_table  = tables[2] #Last table
-    col = ['Rank', 'Team', 'Game', 'W-T-L', 'PCT', 'GB', '富邦', 'Lamigo', '中信兄弟', '統一獅', 'Home', 'Away']
+    col = ['Rank', 'Team', 'Game', 'W-T-L', 'PCT', 'GB', 'Fubon', 'Lamigo', 'Brothers', 'Uni-lion', 'Home', 'Away']
     data = []
     stat_data = stat_table.find_all('td', {'align':'center'})
     df = pd.DataFrame(columns = col)
@@ -70,7 +76,29 @@ def get_team_stat(year):
             df.loc[i] = data
             data = []
             i += 1
-    print(df)  
+    print(df)
+    '''ax = plt.subplot(1, 1, 1, frame_on=False)
+    ax.xaxis.set_visible(False)  # hide the x axis
+    ax.yaxis.set_visible(False)  # hide the y axis
+    plt.rcParams['font.sans-serif']=['Microsoft YaHei']
+    plt.rcParams['font.sans-serif']=['SimHei']
+    #df_pic=df[['Rank', 'Team', 'Game', 'W-T-L', 'PCT', 'GB', '富邦', 'Lamigo', '中信兄弟', '統一獅', 'Home', 'Away']]
+    #df_pic=df_pic.astype(float)
+    #df_pic=df_pic.plot()
+    #plt.grid()
+    plt.title(year+'CPBL Team',fontsize=22)
+    tb = table(ax, df)
+    tb.set_fontsize(20)
+    tb.scale(1, 1)
+    plt.savefig('JPY_df.png', dpi=300)
+    plt.show()
+    # upload to imgur and get url
+    CLIENT_ID = "ecb45108c47a045"
+    PATH = "JPY_df.png"
+    im = pyimgur.Imgur(CLIENT_ID)
+    uploaded_image = im.upload_image(PATH, title="upload")
+    return uploaded_image.link'''
+    return df
 
 def get_game_stat(date):
     pass

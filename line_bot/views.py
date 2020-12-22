@@ -39,7 +39,7 @@ def callback(req : HttpRequest):
         for event in events:
             if event.source.user_id not in machine:
                 machine[event.source.user_id] = TocMachine(
-                    states = ['start', 'fsm', 'player', 'player_stat','player_name', 'att', 'def', 'team', 'team_year', 'team_stat', 'league', 'league_yt'], 
+                    states = ['start', 'fsm', 'player', 'player_stat','player_name', 'att', 'def', 'team', 'team_year', 'league', 'league_yt'], 
                     transitions =[
                         { #start to fsm
                             "trigger" : "advance",
@@ -95,12 +95,7 @@ def callback(req : HttpRequest):
                             "dest" : "team_year",
                             "conditions" : "going_team_year"
                         },
-                        { #team_year to team_stat
-                            "trigger" : "advance",
-                            "source" : "team_year",
-                            "dest" : "team_stat",
-                            "conditions" : "going_team_stat"
-                        },
+                        
                         { #
                             "trigger" : "advance",
                             "source" : "start",
@@ -116,7 +111,7 @@ def callback(req : HttpRequest):
                         { #options and fsm go back to start
                             "trigger" : "advance",
                             "source" : ["start", "fsm", 'player', 'team', 'league','league_yt',
-                            'player_stat','att', 'def', 'team_stat'],
+                            'player_stat','att', 'def'],
                             "dest" : "start",
                             "conditions" : "back_start"
                         },
@@ -125,12 +120,6 @@ def callback(req : HttpRequest):
                             "source" : ["league_yt"],
                             "dest" : "league",
                             "conditions" : "back_league"
-                        },
-                        { #
-                            "trigger" : "advance",
-                            "source" : ["team_stat"],
-                            "dest" : "team",
-                            "conditions" : "back_team"
                         },
                         { #
                             "trigger" : "advance",
