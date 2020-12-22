@@ -1,1 +1,3 @@
 ./cpbl_bot/settings.py
+./cpbl_bot/line_bot/__init__.py
+./cpbl_bot/line_bot/__pycache__/

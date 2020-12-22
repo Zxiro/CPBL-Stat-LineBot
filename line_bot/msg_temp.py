@@ -55,7 +55,7 @@ def main_menu():
       "type": "bubble",
       "hero": {
         "type": "image",
-        "url": "https://i.imgur.com/bVjkU07.png",
+        "url": "https://i.imgur.com/K7C7xCn.jpg", #CPBL logo
         "size": "full",
         "aspectMode": "fit",
         "aspectRatio": "1:1"
@@ -83,7 +83,7 @@ def main_menu():
       "type": "bubble",
       "hero": {
         "type": "image",
-        "url": "https://i.imgur.com/V2tkpQb.png",
+        "url": "https://i.imgur.com/awhdTdx.png", #fsm picture
         "size": "full",
         "aspectMode": "fit",
         "aspectRatio": "1:1"
@@ -110,8 +110,8 @@ def main_menu():
     {
       "type": "bubble",
       "hero": {
-        "type": "image",
-        "url": "https://i.imgur.com/nQaCDXh.png",
+        "type": "image", 
+        "url": "https://i.imgur.com/9UXqh3A.png", #player stat
         "size": "full",
         "aspectMode": "fit",
         "aspectRatio": "1:1"
@@ -125,7 +125,7 @@ def main_menu():
             "action": {
               "type": "message",
               "label": "球員數據",
-              "text": "player"
+              "text": "player_name"
             },
             "height": "md",
             "color": "#ff66b3",
@@ -139,7 +139,7 @@ def main_menu():
       "type": "bubble",
       "hero": {
         "type": "image",
-        "url": "https://i.imgur.com/UrSkoW4.png",
+        "url": "https://i.imgur.com/9QYcxOQ.jpg", #Team stat
         "size": "full",
         "aspectMode": "fit",
         "aspectRatio": "1:1"
@@ -166,7 +166,7 @@ def main_menu():
       "type": "bubble",
       "hero": {
         "type": "image",
-        "url": "https://i.imgur.com/UrSkoW4.png",
+        "url": "https://i.imgur.com/eUxT2OY.png",
         "size": "full",
         "aspectMode": "fit",
         "aspectRatio": "1:1"
@@ -179,7 +179,7 @@ def main_menu():
             "type": "button",
             "action": {
               "type": "message",
-              "label": "聯盟數據",
+              "label": "ˇ對戰數據",
               "text": "league"
             },
             "height": "md",

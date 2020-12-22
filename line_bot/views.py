@@ -39,8 +39,7 @@ def callback(req : HttpRequest):
         for event in events:
             if event.source.user_id not in machine:
                 machine[event.source.user_id] = TocMachine(
-                    states = ['start', 'fsm', 'options', 'player', 'year', 'player_stat','player_name', 'att', 'def', 'team', 'team_stat', 
-                    'league',  'league_yt'], 
+                    states = ['start', 'fsm', 'player', 'player_stat','player_name', 'att', 'def', 'team', 'team_year', 'team_stat', 'league', 'league_yt'], 
                     transitions =[
                         { #start to fsm
                             "trigger" : "advance",
@@ -48,15 +47,9 @@ def callback(req : HttpRequest):
                             "dest" : "fsm",
                             "conditions" : "going_fsm"
                         }, 
-                        { #start to options
-                            "trigger" : "advance",
-                            "source" : "start",
-                            "dest" : "options",
-                            "conditions" : "going_option"
-                        },
                         { #options to player
                             "trigger" : "advance",
-                            "source" : "options",
+                            "source" : "start",
                             "dest" : "player_name",
                             "conditions" : "going_player_name"
                         },
@@ -69,18 +62,12 @@ def callback(req : HttpRequest):
                         { #players to year
                             "trigger" : "advance",
                             "source" : "player",
-                            "dest" : "player_name",
-                            "conditions" : "going_player_name"
+                            "dest" : "player",
+                            "conditions" : "back_player_name"
                         },
                         { #players to year
                             "trigger" : "advance",
                             "source" : "player",
-                            "dest" : "year",
-                            "conditions" : "going_year"
-                        },
-                        { #players to year
-                            "trigger" : "advance",
-                            "source" : "year",
                             "dest" : "player_stat",
                             "conditions" : "going_player_stat"
                         },
@@ -98,19 +85,25 @@ def callback(req : HttpRequest):
                         },
                         { #options to team
                             "trigger" : "advance",
-                            "source" : "options",
+                            "source" : "start",
                             "dest" : "team",
                             "conditions" : "going_team"
                         },
                         { #team_year to team_stat
                             "trigger" : "advance",
                             "source" : "team",
+                            "dest" : "team_year",
+                            "conditions" : "going_team_year"
+                        },
+                        { #team_year to team_stat
+                            "trigger" : "advance",
+                            "source" : "team_year",
                             "dest" : "team_stat",
                             "conditions" : "going_team_stat"
                         },
                         { #
                             "trigger" : "advance",
-                            "source" : "options",
+                            "source" : "start",
                             "dest" : "league",
                             "conditions" : "going_league"
                         },
@@ -122,7 +115,8 @@ def callback(req : HttpRequest):
                         },                         
                         { #options and fsm go back to start
                             "trigger" : "advance",
-                            "source" : ["start", "fsm", "options"],
+                            "source" : ["start", "fsm", 'player', 'team', 'league','league_yt',
+                            'player_stat','att', 'def', 'team_stat'],
                             "dest" : "start",
                             "conditions" : "back_start"
                         },
@@ -138,27 +132,20 @@ def callback(req : HttpRequest):
                             "dest" : "team",
                             "conditions" : "back_team"
                         },
+                        { #
+                            "trigger" : "advance",
+                            "source" : "team_year",
+                            "dest" : "team_year",
+                            "conditions" : "back_team_year"
+                        },
                         { #att and def go back to year
                             "trigger" : "advance",
                             "source" : ["att", "def", 'player_stat'],
                             "dest" : "player",
                             "conditions" : "back_player"
-                        },
-                        { #att and def go back to year
-                            "trigger" : "advance",
-                            "source" : ["att", "def", 'player_stat'],
-                            "dest" : "year",
-                            "conditions" : "back_year"
-                        },                        
-                        { #player, team and league go back to options
-                            "trigger" : "advance",
-                            "source" : ['player', 'team', 'league','league_yt',
-                            'year', 'player_stat','att', 'def', 'team_stat'],
-                            "dest" : "options",
-                            "conditions" : "back_options"
-                        }, 
+                        },                     
                     ],
-                    initial="options", #init needs to be start can use this para to debug
+                    initial="start", #init needs to be start can use this para to debug
                     auto_transitions = False,
                     show_conditions = True,
                 )
