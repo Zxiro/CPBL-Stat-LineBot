@@ -1,3 +1,4 @@
+import datetime as dt
 import requests as req
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -37,12 +38,17 @@ class TocMachine(GraphMachine):
     def back_player(self, event):
         text = event.message.text
         print('back_player', text)
-        return text.lower() == 'player'
+        return True
 
     def back_player_name(self, event):
         text = event.message.text
         print('back_player_name', text)
-        return True   
+        return True
+    
+    def back_player_year(self, event):
+        text = event.message.text
+        print('back_player_year', text)
+        return True
 
     def on_enter_start(self, event):
         reply_token = event.reply_token
@@ -63,24 +69,46 @@ class TocMachine(GraphMachine):
         send_image_url(reply_token, msg_to_rep)
         return True
     
-    def going_player_name(self, event):
-        text = event.message.text
-        print('going_player_name', text)
-        return text.lower() == 'player_name'
-
-    def on_enter_player_name(self, event): #Input the player name
-        send_text_message(event.reply_token, '請輸入球員名稱')
-        text = event.message.text 
-        return text.lower() == 'player_name'
-
     def going_player(self, event):
         text = event.message.text
         print('going_player', text)
-        return True
+        return text.lower() == 'player'
 
     def on_enter_player(self, event): #Input the player name
+        send_text_message(event.reply_token, '請輸入球員名稱')
         text = event.message.text
+        return text.lower() == 'player'
+
+    def going_player_name(self, event):
+        text = event.message.text
+        print('going_player_name', text)
+        return True
+
+    def on_enter_player_name(self, event): #Input the player name
+        text = event.message.text
+        stat_ = get_player_stat(text)
+        stat_ = 0
+        if(type(stat_) == int):
+            send_text_message(event.reply_token, '查無此人, 請輸入正確名稱!')
+            return text.lower() == 'player_name'
+        return text.lower() == 'player_name'
+
+    def going_player_year(self, event):
+        text = event.message.text
+        print('going_player', text)
+        return text.lower() == 'player_year'
+
+    def on_enter_player_year(self, event): #Input the player name
+        name = event.message.text
+        send_text_message(event.reply_token, '請輸入球季年分')
+        year = event.message.text
+        if (type(year)== str):
+            send_text_message(event.reply_token, '錯誤年分')
+            return text.lower() == 'back_player_year'
+        ddd = (name, year) 
         print('enter_player', text)
+        print(ddd)
+        return True
         stat_ = get_player_stat(text)
         if(type(stat_) == int):
             send_text_message(event.reply_token, '查無此人, 請輸入正確名稱!')
@@ -89,7 +117,7 @@ class TocMachine(GraphMachine):
             message = table()
             for i in range(18):
                 message["body"]["contents"][2]["contents"][i]["contents"][1]["text"] = stat_[i]
-            msg_to_rep = FlexSendMessage("查詢即時值", message)
+            msg_to_rep = FlexSendMessage(text + "數據", message)
             send_flex_message(event.reply_token, msg_to_rep)
     
     def going_player_stat(self, event):
@@ -141,10 +169,13 @@ class TocMachine(GraphMachine):
         text = event.message.text
         print('enter_team_year', text)
         stat_ = get_team_stat(text) #Imgur Link
-        stat_.drop(['Rank', 'PCT', 'GB', 'Home', 'Away'], inplace = True,  axis=1)
-        if(type(stat_) == int):
+        if(type(stat_)== int and stat_ == 1):
             send_text_message(event.reply_token, '請輸入正確年份')
             return text.lower() == 'team_year'
+        if(type(stat_)== int and stat_ == 2):
+            send_text_message(event.reply_token, '查無資料, 請重新輸入!')
+            return text.lower() == 'team_year'
+        stat_.drop(['Rank', 'PCT', 'GB', 'Home', 'Away'], inplace = True,  axis=1)
         message = show_team()
         for i in range(4):
             tmp_list = stat_.loc[i].tolist()
@@ -160,18 +191,13 @@ class TocMachine(GraphMachine):
                     "text": tmp_list[j],
                     "size": "sm",
                     "color": "#555555",
-                    "flex": 0,
+                    "flex": 1,
                     "margin": "md"
                 } 
                 data['contents'].append(detail_data)
             message["body"]["contents"][4]["contents"].append(data)
         msg_to_rep = FlexSendMessage("球隊戰績", message)
-        send_flex_message(event.reply_token, msg_to_rep)
-        #message = plot()
-        #message['contents'][0]['hero']['url'] = stat_
-        #message_to_reply = ImageSendMessage(original_content_url=stat_,preview_image_url=stat_)
-        #message_to_reply = FlexSendMessage("趨勢圖-近三個月", message)
-        #send_flex_message(event.reply_token, message_to_reply)
+        send_flex_message(event.reply_token, msg_to_rep) 
 
     def going_league(self, event):
         text = event.message.text

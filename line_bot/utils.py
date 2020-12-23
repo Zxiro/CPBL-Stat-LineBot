@@ -1,5 +1,6 @@
 import os
 import pyimgur
+import datetime as dt
 import matplotlib.pyplot as plt
 import requests as req
 import pandas as pd
@@ -58,12 +59,16 @@ def get_player_stat(name):
         return(df)
 
 def get_team_stat(year):
+    if int(year)> dt.datetime.now().year or year.isdigit()==False or len(year) < 4:
+        return 1
     headers = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36 Edg/87.0.664.60'}
     res = req.get(
         'http://www.cpbl.com.tw/standing/year/'+year+'.html?&game_no=01&year='+year, 
         headers = headers)
     soup = BeautifulSoup(res.content, 'html.parser')
     tables = soup.find_all('table', {'class':'std_tb mix_x'}) #Get three team stat table
+    if (len(tables) != 3):
+        return 2
     stat_table  = tables[2] #Last table
     col = ['Rank', 'Team', 'Game', 'W-T-L', 'PCT', 'GB', 'Fubon', 'Lamigo', 'Brothers', 'Uni-lion', 'Home', 'Away']
     data = []

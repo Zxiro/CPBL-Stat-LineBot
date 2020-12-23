@@ -125,7 +125,7 @@ def main_menu():
             "action": {
               "type": "message",
               "label": "球員數據",
-              "text": "player_name"
+              "text": "player"
             },
             "height": "md",
             "color": "#ff66b3",
@@ -673,57 +673,57 @@ def show_team():
                   "text": "Team",
                   "size": "md",
                   "color": "#555555",
-                  "flex": 0,
-                  "margin": "md"
+                  "flex": 1,
+                  "margin": "lg"
                 },
                 {
                   "type": "text",
                   "text": "Game",
                   "size": "md",
                   "color": "#555555",
-                  "flex": 0,
-                  "margin": "md"
+                  "flex": 1,
+                  "margin": "lg"
                 },
                 {
                   "type": "text",
                   "text": "W-T-L",
                   "size": "md",
                   "color": "#555555",
-                  "flex": 0,
-                  "margin": "md"
+                  "flex": 1,
+                  "margin": "lg"
                 },
 
                 {
                   "type": "text",
                   "text": "富邦",
-                  "size": "md",
+                  "size": "lg",
                   "color": "#555555",
-                  "flex": 0,
-                  "margin": "md"
+                  "flex": 1,
+                  "margin": "lg"
                 },
                 {
                   "type": "text",
                   "text": "Lamigo",
                   "size": "md",
                   "color": "#555555",
-                  "flex": 0,
-                  "margin": "md"
+                  "flex": 1,
+                  "margin": "lg"
                 },
                 {
                   "type": "text",
                   "text": "中信兄弟",
                   "size": "md",
                   "color": "#555555",
-                  "flex": 0,
-                  "margin": "md"
+                  "flex": 1,
+                  "margin": "lg"
                 },
                 {
                   "type": "text",
                   "text": "統一獅",
                   "size": "md",
                   "color": "#555555",
-                  "flex": 0,
-                  "margin": "md"
+                  "flex": 1,
+                  "margin": "lg"
                 },
               ]
             },
@@ -747,6 +747,19 @@ def show_team():
       "type": "box",
       "layout": "vertical",
       "contents": [
+        {
+          "type": "button",
+          "style": "primary",
+          "action": {
+            "type": "message",
+            "label": "查詢其他年份",
+            "text": "team"
+          }
+        },
+        {
+          "type": "separator",
+          "margin": "sm"
+        },
         {
           "type": "button",
           "style": "primary",
