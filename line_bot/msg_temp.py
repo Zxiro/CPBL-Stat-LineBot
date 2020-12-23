@@ -730,77 +730,17 @@ def show_team():
           ]
         },
         {
+          "type": "separator",
+          "margin": "sm"
+        },
+        {
           "type": "box",
-          "layout": "horizontal",
+          "layout": "vertical",
           "margin": "sm",
           "spacing": "sm",
           "contents": [
-            {
-              "type": "box",
-              "layout": "horizontal",
-              "contents": [
-                {
-                  "type": "text",
-                  "text": "Team",
-                  "size": "sm",
-                  "color": "#555555",
-                  "flex": 0,
-                  "margin": "md"
-                },
-                {
-                  "type": "text",
-                  "text": "Game",
-                  "size": "sm",
-                  "color": "#555555",
-                  "flex": 0,
-                  "margin": "md"
-                },
-                {
-                  "type": "text",
-                  "text": "W-T-L",
-                  "size": "sm",
-                  "color": "#555555",
-                  "flex": 0,
-                  "margin": "md"
-                },
-
-                {
-                  "type": "text",
-                  "text": "富邦",
-                  "size": "sm",
-                  "color": "#555555",
-                  "flex": 0,
-                  "margin": "md"
-                },
-                {
-                  "type": "text",
-                  "text": "Lamigo",
-                  "size": "sm",
-                  "color": "#555555",
-                  "flex": 0,
-                  "margin": "md"
-                },
-                {
-                  "type": "text",
-                  "text": "中信兄弟",
-                  "size": "sm",
-                  "color": "#555555",
-                  "flex": 0,
-                  "margin": "md"
-                },
-                {
-                  "type": "text",
-                  "text": "統一獅",
-                  "size": "sm",
-                  "color": "#555555",
-                  "flex": 0,
-                  "margin": "md"
-                },
-              ]
-            },
           ]
         },
-        
       ]
     },
     "footer": {

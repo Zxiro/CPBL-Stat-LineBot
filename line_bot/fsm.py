@@ -148,8 +148,23 @@ class TocMachine(GraphMachine):
         message = show_team()
         for i in range(4):
             tmp_list = stat_.loc[i].tolist()
+            print(tmp_list)
+            data = {
+                "type": "box",
+                "layout": "horizontal",
+                "contents": []
+             }
             for j in range(len(tmp_list)):
-                message["body"]["contents"][3]["contents"][0]["contents"][j]["text"] = tmp_list[j]
+                detail_data = {
+                    "type": "text",
+                    "text": tmp_list[j],
+                    "size": "sm",
+                    "color": "#555555",
+                    "flex": 0,
+                    "margin": "md"
+                } 
+                data['contents'].append(detail_data)
+            message["body"]["contents"][4]["contents"].append(data)
         msg_to_rep = FlexSendMessage("球隊戰績", message)
         send_flex_message(event.reply_token, msg_to_rep)
         #message = plot()
