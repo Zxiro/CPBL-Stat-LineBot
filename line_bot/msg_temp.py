@@ -236,7 +236,7 @@ def table():
           "action": {
             "type": "message",
             "label": "查看其他選手",
-            "text": "start"
+            "text": "player"
           }
         },
         {
@@ -245,7 +245,7 @@ def table():
           "action": {
             "type": "message",
             "label": "查看其他年份",
-            "text": "start"
+            "text": "player_name"
           }
         },
         {

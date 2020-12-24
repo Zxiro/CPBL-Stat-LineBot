@@ -101,19 +101,16 @@ class TocMachine(GraphMachine):
         if(self.name != ''):
             return True
 
-    def on_enter_player_year(self, event): #Input the player name\
+    def on_enter_player_year(self, event): #Input the player name
         name = self.name
         year = event.message.text
         if(year.isdigit() == False or len(year)<4 ):
-            send_text_message(event.reply_token, '查無此年, 請輸入正確名稱!')
+            send_text_message(event.reply_token, '年份錯誤, 請重新輸入!')
             return True
-        ddd = (name, year) 
-        print(ddd)
-        stat_ = get_player_stat(name, year)
-        if(type(stat_) == int):
-            send_text_message(event.reply_token, '查無此人, 請輸入正確名稱!')
-            return text.lower() == 'back_player_name'
         else:
+            ddd = (name, year) 
+            print(ddd)
+            stat_ = get_player_stat(name, year)
             message = table()
             out_box = {
                 "type":"box",
@@ -130,8 +127,6 @@ class TocMachine(GraphMachine):
                 "contents": [],
                 "flex" : 1
             }
-            print(stat_.columns)
-            print(stat_.columns[2])
             for col in range(1, len(stat_.columns)):
                 data = {
                     "type": "text",
@@ -168,7 +163,7 @@ class TocMachine(GraphMachine):
     
     def going_player_stat(self, event):
         print('going_player_stat', text)
-        if (self.year.isdigit() == True):
+        if (self.year.isdigit() == True):# 可以往下
             return True
 
     def on_enter_player_stat(self, event): #Select player stats type
@@ -176,25 +171,6 @@ class TocMachine(GraphMachine):
         print('enter_player_stat', text)
         send_text_message(event.reply_token, text)
         
-    def going_att(self, event):   
-        text = event.message.text
-        print('going_att', text)
-        return text.lower() == 'att'
-
-    def on_enter_att(self, event): #Get the players att
-        text = event.message.text
-        print('enter_att', text)
-        send_text_message(event.reply_token, text)
-
-    def going_def(self, event):   
-        text = event.message.text
-        print('going_def', text)
-        return text.lower() == 'def'
-
-    def on_enter_def(self, event): #Get the players att
-        text = event.message.text
-        print('enter_def', text)
-        send_text_message(event.reply_token, text)  
     
     def going_team(self, event):
         text = event.message.text

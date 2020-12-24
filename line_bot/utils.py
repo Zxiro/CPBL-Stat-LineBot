@@ -38,28 +38,36 @@ def get_player_stat(name, year):
     soup = BeautifulSoup(req.get('http://www.cpbl.com.tw'+ player_stat_herf).content, 'html.parser')# Into players stat page
     tables = soup.find_all('table', {'class':'std_tb mix_x'})
     table = tables[:3]
-    col = ['年份', '隊伍', '出賽場數', '打席', '打數', '打點', '得分', '安打', '一壘安打', '二壘安打', '三壘安打', '全壘打', '壘打','被三振', '保送', 'OBP', 'SLG', 'AVG']
+    col = ['Year', 'Team']
     data = []
-    df = pd.DataFrame(columns = col)
     #print(table)
     for t in table: #T1 att, T2 def 13 non-req data
+        col_table = t.find_all('th', {'class':'display_a1'})
+        for co in col_table:
+            col.append(co.text)
         detail_table = t.find_all('tr')
         i = 0
+        df = pd.DataFrame(columns = col)
         for d_t in detail_table:
-            #print(d_t)
-            data = []
             stat = d_t.find_all('td', {'align':'center'})
-            #print(stat)
-            if(len(stat)-13 == len(col)):
-                for j in range(len(col)):
-                    data.append(stat[j].text)
-                df.loc[i] = data
-            i += 1
-            #print(df)
-        #print(df)
+            if len(stat) == 0:
+                continue
+            for k in range(2):
+                data.append(stat[k].text)
+            stat = d_t.find_all('td', {'class':'display_a1'})
+            if len(stat) == 0:
+                data = []
+                continue
+            for j in range(len(stat)):
+                data.append(stat[j].text)
+            df.loc[i] = data
+            data = []
+            i+=1
         break
+    df = df.replace('\n','\r', regex=True)
+    df = df.replace('\t', regex=True)
     print(df)
-    stat_list = df.loc[df['年份'] == year]
+    stat_list = df.loc[df['Year'] == year]
     stat_list.reset_index(inplace = True)
     print(stat_list)
     return(stat_list)

@@ -39,7 +39,7 @@ def callback(req : HttpRequest):
         for event in events:
             if event.source.user_id not in machine:
                 machine[event.source.user_id] = TocMachine(
-                    states = ['start', 'fsm', 'player', 'player_year', 'player_stat','player_name', 'att', 'def', 'team', 'team_year', 'league', 'league_yt'], 
+                    states = ['start', 'fsm', 'player', 'player_year','player_name', 'team', 'team_year', 'league', 'league_yt'], 
                     transitions =[
                         { #start to fsm
                             "trigger" : "advance",
@@ -65,6 +65,18 @@ def callback(req : HttpRequest):
                             "dest" : "player_year",
                             "conditions" : "going_player_year"
                         },
+                        { #options to player
+                            "trigger" : "advance",
+                            "source" : "player_year",
+                            "dest" : "player_name",
+                            "conditions" : "going_player_name"
+                        },
+                        { #options to player
+                            "trigger" : "advance",
+                            "source" : "player_year",
+                            "dest" : "player",
+                            "conditions" : "going_player"
+                        },
                         { #players to year
                             "trigger" : "advance",
                             "source" : "player_year",
@@ -73,27 +85,9 @@ def callback(req : HttpRequest):
                         },
                         { #players to year
                             "trigger" : "advance",
-                            "source" : "player_year",
-                            "dest" : "player_stat",
-                            "conditions" : "going_player_stat"
-                        },
-                        { #players to year
-                            "trigger" : "advance",
                             "source" : "player_name",
                             "dest" : "player_name",
                             "conditions" : "back_player_name"
-                        },
-                        { #year to att
-                            "trigger" : "advance",
-                            "source" : "player_stat",
-                            "dest" : "att",
-                            "conditions" : "going_att"
-                        },
-                        { #year to def
-                            "trigger" : "advance",
-                            "source" : "player_stat",
-                            "dest" : "def",
-                            "conditions" : "going_def"
                         },
                         { #options to team
                             "trigger" : "advance",
@@ -128,7 +122,7 @@ def callback(req : HttpRequest):
                         { #options and fsm go back to start
                             "trigger" : "advance",
                             "source" : ["start", "fsm", 'team','team_year', 'league','league_yt'
-                            , 'player', 'player_stat','att', 'def'],
+                            , 'player'],
                             "dest" : "start",
                             "conditions" : "back_start"
                         },
@@ -144,12 +138,6 @@ def callback(req : HttpRequest):
                             "dest" : "team_year",
                             "conditions" : "back_team_year"
                         },
-                        { #att and def go back to year
-                            "trigger" : "advance",
-                            "source" : ["att", "def", 'player_stat', ],
-                            "dest" : "player",
-                            "conditions" : "back_player"
-                        },                     
                     ],
                     initial="start", #init needs to be start can use this para to debug
                     auto_transitions = False,
