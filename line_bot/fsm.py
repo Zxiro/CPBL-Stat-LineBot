@@ -8,8 +8,8 @@ from django.conf import settings
 from linebot import LineBotApi, WebhookParser
 from linebot.models import MessageEvent, TextSendMessage, TextMessage, FlexSendMessage, ImageSendMessage
 from pandas.plotting import table 
-from .utils import send_text_message, send_image_url, send_flex_message, get_player_stat, get_team_stat
-from .msg_temp import show_pic, main_menu, table, plot, show_team
+from .utils import send_text_message, send_image_url, send_flex_message, get_player_stat, get_team_stat, search_player
+from .msg_temp import show_pic, main_menu, table, show_team
 
 class TocMachine(GraphMachine):
     def __init__(self, **machine_configs):
@@ -87,9 +87,8 @@ class TocMachine(GraphMachine):
     def on_enter_player_name(self, event): #Input the player name
         text = event.message.text
         print('name: ', text)
-        #stat_ = get_player_stat(text)
-        #stat_ = 0
-        if(text.isdigit() == True):
+        name = search_player(text)
+        if(type(name)== int ):
             send_text_message(event.reply_token, '查無此人, 請輸入正確名稱!')
         else:
             self.name = text
@@ -104,23 +103,67 @@ class TocMachine(GraphMachine):
 
     def on_enter_player_year(self, event): #Input the player name\
         name = self.name
-        print(name)
         year = event.message.text
-        print(year)
-        if(year.isdigit() == True):
+        if(year.isdigit() == False or len(year)<4 ):
             send_text_message(event.reply_token, '查無此年, 請輸入正確名稱!')
             return True
         ddd = (name, year) 
         print(ddd)
-        stat_ = get_player_stat(text)
+        stat_ = get_player_stat(name, year)
         if(type(stat_) == int):
             send_text_message(event.reply_token, '查無此人, 請輸入正確名稱!')
             return text.lower() == 'back_player_name'
         else:
             message = table()
-            for i in range(18):
-                message["body"]["contents"][2]["contents"][i]["contents"][1]["text"] = stat_[i]
-            msg_to_rep = FlexSendMessage(text + "數據", message)
+            out_box = {
+                "type":"box",
+                "layout": "horizontal",
+                "margin": "md",
+                "spacing": "sm",
+                "contents": [],
+                "flex" : 1
+            }
+            box = {
+                "type": "box",
+                "layout": "vertical",
+                "margin": "sm",
+                "contents": [],
+                "flex" : 1
+            }
+            print(stat_.columns)
+            print(stat_.columns[2])
+            for col in range(1, len(stat_.columns)):
+                data = {
+                    "type": "text",
+                    "text": stat_.columns[col],
+                    "size": "md",
+                    "color": "#555555",
+                    "flex" : 1
+                }
+                box['contents'].append(data)
+            out_box['contents'].append(box)
+            for i in range(len(stat_.index)): # Iter row number time
+                tmp_list = stat_.loc[i].tolist()
+                box = {
+                "type": "box",
+                "layout": "vertical",
+                "margin": "sm",
+                "spacing": "sm",
+                "contents": [],
+                "flex" : 1
+                }
+                for j in range(1, len(tmp_list)):
+                    data = {
+                        "type": "text",
+                        "text": tmp_list[j],
+                        "size": "md",
+                        "color": "#111111",
+                        "flex" : 1
+                    }
+                    box['contents'].append(data)
+                out_box['contents'].append(box)
+            message["body"]["contents"][2]["contents"].append(out_box)
+            msg_to_rep = FlexSendMessage(self.name + "數據", message)
             send_flex_message(event.reply_token, msg_to_rep)
     
     def going_player_stat(self, event):

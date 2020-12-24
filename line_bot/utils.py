@@ -15,7 +15,7 @@ from linebot.models import MessageEvent, TextMessage, TextSendMessage
 channel_access_token = settings.LINE_CHANNEL_ACCESS_TOKEN
 
 
-def get_player_stat(name):
+def search_player(name):
     headers = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36 Edg/87.0.664.60'}
     res = req.get(
         'http://www.cpbl.com.tw/players.html?&offset=0&status=&teamno=&keyword='+name, 
@@ -30,33 +30,39 @@ def get_player_stat(name):
             get = 1
             break
     if get == 0 :
-        return 0
-    else:
-        soup = BeautifulSoup(req.get('http://www.cpbl.com.tw'+ player_stat_herf).content, 'html.parser')# Into players stat page
-        tables = soup.find_all('table', {'class':'std_tb mix_x'})
-        table = tables[:3]
-        col = ['年分', '隊伍', '出賽場數', '打席', '打數', '打點', '得分', '安打', '一壘安打', '二壘安打', '三壘安打', '全壘打', '壘打','被三振', '保送', 'OBP', 'SLG', 'AVG']
-        data = []
-        df = pd.DataFrame(columns = col)
-        #print(table)
-        for t in table: #T1 att, T2 def 13 non-req data
-            detail_table = t.find_all('tr')
-            i = 0
-            for d_t in detail_table:
-                print(d_t)
-                data = []
-                stat = d_t.find_all('td', {'align':'center'})
-                print(stat)
-                if(len(stat)-13 == len(col)):
-                    for j in range(len(col)):
-                        data.append(stat[j].text)
-                    df.loc[i] = data
-                i += 1
-                print(df)
-            print(df)
-            break
-        print(df)
-        return(df)
+        return 0 #Can't get the player data
+    return player_stat_herf
+
+def get_player_stat(name, year):
+    player_stat_herf = search_player(name)
+    soup = BeautifulSoup(req.get('http://www.cpbl.com.tw'+ player_stat_herf).content, 'html.parser')# Into players stat page
+    tables = soup.find_all('table', {'class':'std_tb mix_x'})
+    table = tables[:3]
+    col = ['年份', '隊伍', '出賽場數', '打席', '打數', '打點', '得分', '安打', '一壘安打', '二壘安打', '三壘安打', '全壘打', '壘打','被三振', '保送', 'OBP', 'SLG', 'AVG']
+    data = []
+    df = pd.DataFrame(columns = col)
+    #print(table)
+    for t in table: #T1 att, T2 def 13 non-req data
+        detail_table = t.find_all('tr')
+        i = 0
+        for d_t in detail_table:
+            #print(d_t)
+            data = []
+            stat = d_t.find_all('td', {'align':'center'})
+            #print(stat)
+            if(len(stat)-13 == len(col)):
+                for j in range(len(col)):
+                    data.append(stat[j].text)
+                df.loc[i] = data
+            i += 1
+            #print(df)
+        #print(df)
+        break
+    print(df)
+    stat_list = df.loc[df['年份'] == year]
+    stat_list.reset_index(inplace = True)
+    print(stat_list)
+    return(stat_list)
 
 def get_team_stat(year):
     if int(year)> dt.datetime.now().year or year.isdigit()==False or len(year) < 4:

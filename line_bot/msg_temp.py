@@ -197,7 +197,9 @@ def main_menu():
 def table():
   table = {
     "type": "bubble",
+    "size" : "giga",
     "body": {
+      
       "type": "box",
       "layout": "vertical",
       "contents": [
@@ -214,355 +216,13 @@ def table():
         },
         {
           "type": "box",
-          "layout": "vertical",
-          "margin": "xl",
+          "layout": "horizontal",
+          "margin": "md",
           "spacing": "sm",
           "contents": [
-            {
-              "type": "box",
-              "layout": "horizontal",
-              "contents": [
-                {
-                  "type": "text",
-                  "text": "年份",
-                  "size": "md",
-                  "color": "#555555",
-                  "flex": 0
-                },
-                {
-                  "type": "text",
-                  "text": "$0.99",
-                  "size": "md",
-                  "color": "#111111",
-                  "align": "end"
-                }
-              ]
-            },
-            {
-              "type": "box",
-              "layout": "horizontal",
-              "contents": [
-                {
-                  "type": "text",
-                  "text": "球隊",
-                  "size": "md",
-                  "color": "#555555",
-                  "flex": 0
-                },
-                {
-                  "type": "text",
-                  "text": "$3.33",
-                  "size": "md",
-                  "color": "#111111",
-                  "align": "end"
-                }
-              ]
-            },
-            {
-              "type": "box",
-              "layout": "horizontal",
-              "contents": [
-                {
-                  "type": "text",
-                  "text": "打席",
-                  "size": "md",
-                  "color": "#555555"
-                },
-                {
-                  "type": "text",
-                  "text": "$0.69",
-                  "size": "md",
-                  "color": "#111111",
-                  "align": "end"
-                }
-              ]
-            },
-            {
-              "type": "box",
-              "layout": "horizontal",
-              "contents": [
-                {
-                  "type": "text",
-                  "text": "打數",
-                  "size": "md",
-                  "color": "#555555"
-                },
-                {
-                  "type": "text",
-                  "text": "$8.0",
-                  "size": "md",
-                  "color": "#111111",
-                  "align": "end"
-                }
-              ]
-            },
-            {
-              "type": "box",
-              "layout": "horizontal",
-              "contents": [
-                {
-                  "type": "text",
-                  "text": "打點",
-                  "size": "md",
-                  "color": "#555555"
-                },
-                {
-                  "type": "text",
-                  "text": "$8.0",
-                  "size": "md",
-                  "color": "#111111",
-                  "align": "end"
-                }
-              ]
-            },
-            {
-              "type": "box",
-              "layout": "horizontal",
-              "contents": [
-                {
-                  "type": "text",
-                  "text": "得分",
-                  "size": "md",
-                  "color": "#555555"
-                },
-                {
-                  "type": "text",
-                  "text": "$8.0",
-                  "size": "md",
-                  "color": "#111111",
-                  "align": "end"
-                }
-              ]
-            },
-            {
-              "type": "box",
-              "layout": "horizontal",
-              "contents": [
-                {
-                  "type": "text",
-                  "text": "安打",
-                  "size": "md",
-                  "color": "#555555"
-                },
-                {
-                  "type": "text",
-                  "text": "$8.0",
-                  "size": "md",
-                  "color": "#111111",
-                  "align": "end"
-                }
-              ]
-            },
-            {
-              "type": "box",
-              "layout": "horizontal",
-              "contents": [
-                {
-                  "type": "text",
-                  "text": "一壘安打",
-                  "size": "md",
-                  "color": "#555555"
-                },
-                {
-                  "type": "text",
-                  "text": "$8.0",
-                  "size": "md",
-                  "color": "#111111",
-                  "align": "end"
-                }
-              ]
-            },
-            {
-              "type": "box",
-              "layout": "horizontal",
-              "contents": [
-                {
-                  "type": "text",
-                  "text": "二壘安打",
-                  "size": "md",
-                  "color": "#555555"
-                },
-                {
-                  "type": "text",
-                  "text": "$8.0",
-                  "size": "md",
-                  "color": "#111111",
-                  "align": "end"
-                }
-              ]
-            },
-            {
-              "type": "box",
-              "layout": "horizontal",
-              "contents": [
-                {
-                  "type": "text",
-                  "text": "三壘安打",
-                  "size": "md",
-                  "color": "#555555"
-                },
-                {
-                  "type": "text",
-                  "text": "$8.0",
-                  "size": "md",
-                  "color": "#111111",
-                  "align": "end"
-                }
-              ]
-            },
-            {
-              "type": "box",
-              "layout": "horizontal",
-              "contents": [
-                {
-                  "type": "text",
-                  "text": "全壘打",
-                  "size": "md",
-                  "color": "#555555"
-                },
-                {
-                  "type": "text",
-                  "text": "$8.0",
-                  "size": "md",
-                  "color": "#111111",
-                  "align": "end"
-                }
-              ]
-            },
-            {
-              "type": "box",
-              "layout": "horizontal",
-              "contents": [
-                {
-                  "type": "text",
-                  "text": "壘打",
-                  "size": "md",
-                  "color": "#555555"
-                },
-                {
-                  "type": "text",
-                  "text": "$8.0",
-                  "size": "md",
-                  "color": "#111111",
-                  "align": "end"
-                }
-              ]
-            },
-            {
-              "type": "box",
-              "layout": "horizontal",
-              "contents": [
-                {
-                  "type": "text",
-                  "text": "被三振",
-                  "size": "md",
-                  "color": "#555555"
-                },
-                {
-                  "type": "text",
-                  "text": "$8.0",
-                  "size": "md",
-                  "color": "#111111",
-                  "align": "end"
-                }
-              ]
-            },
-            {
-              "type": "box",
-              "layout": "horizontal",
-              "contents": [
-                {
-                  "type": "text",
-                  "text": "被安打",
-                  "size": "md",
-                  "color": "#555555"
-                },
-                {
-                  "type": "text",
-                  "text": "$8.0",
-                  "size": "md",
-                  "color": "#111111",
-                  "align": "end"
-                }
-              ]
-            },
-            {
-              "type": "box",
-              "layout": "horizontal",
-              "contents": [
-                {
-                  "type": "text",
-                  "text": "保送",
-                  "size": "md",
-                  "color": "#555555"
-                },
-                {
-                  "type": "text",
-                  "text": "$8.0",
-                  "size": "md",
-                  "color": "#111111",
-                  "align": "end"
-                }
-              ]
-            },
-            {
-              "type": "box",
-              "layout": "horizontal",
-              "contents": [
-                {
-                  "type": "text",
-                  "text": "OBP",
-                  "size": "md",
-                  "color": "#555555"
-                },
-                {
-                  "type": "text",
-                  "text": "$8.0",
-                  "size": "md",
-                  "color": "#111111",
-                  "align": "end"
-                }
-              ]
-            },
-            {
-              "type": "box",
-              "layout": "horizontal",
-              "contents": [
-                {
-                  "type": "text",
-                  "text": "SLG",
-                  "size": "md",
-                  "color": "#555555"
-                },
-                {
-                  "type": "text",
-                  "text": "$8.0",
-                  "size": "md",
-                  "color": "#111111",
-                  "align": "end"
-                }
-              ]
-            },
-            {
-              "type": "box",
-              "layout": "horizontal",
-              "contents": [
-                {
-                  "type": "text",
-                  "text": "AVG",
-                  "size": "md",
-                  "color": "#555555"
-                },
-                {
-                  "type": "text",
-                  "text": "$8.0",
-                  "size": "md",
-                  "color": "#111111",
-                  "align": "end"
-                }
-              ]
-            },
-          ]
+
+          ],
+          "flex" : 1
         }
       ]
     },
@@ -575,8 +235,26 @@ def table():
           "style": "primary",
           "action": {
             "type": "message",
+            "label": "查看其他選手",
+            "text": "start"
+          }
+        },
+        {
+          "type": "button",
+          "style": "primary",
+          "action": {
+            "type": "message",
+            "label": "查看其他年份",
+            "text": "start"
+          }
+        },
+        {
+          "type": "button",
+          "style": "primary",
+          "action": {
+            "type": "message",
             "label": "返回主選單",
-            "text": "主選單"
+            "text": "start"
           }
         }
       ]
@@ -588,56 +266,6 @@ def table():
     }
   }
   return table
-
-def plot():
-
-  plot = {
-    "type": "carousel",
-    "contents": [
-      {
-        "type": "bubble",
-        "size": "giga",
-        "hero": {
-          "type": "image",
-          "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/01_1_cafe.png",
-          "aspectMode": "fit",
-          "size": "full"
-        },
-        "footer": {
-          "type": "box",
-          "layout": "vertical",
-          "contents": [
-            {
-              "type": "button",
-              "action": {
-                "type": "message",
-                "label": "查詢其他趨勢",
-                "text": "查詢趨勢走向"
-              },
-              "height": "md",
-              "color": "#5cd65c",
-              "style": "primary"
-            },
-            {
-              "type": "button",
-              "action": {
-                "type": "message",
-                "label": "結束本次操作",
-                "text": "結束本次操作"
-              },
-              "height": "md",
-              "color": "#00cc66",
-              "style": "primary"
-            }
-          ],
-          "spacing": "md"
-        }
-      }
-    ]
-  }
-  return plot
-
-
 
 def show_team():
   team = {
