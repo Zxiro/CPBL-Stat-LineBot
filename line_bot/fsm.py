@@ -14,7 +14,8 @@ from .msg_temp import show_pic, main_menu, table, plot, show_team
 class TocMachine(GraphMachine):
     def __init__(self, **machine_configs):
         self.machine = GraphMachine(model=self, **machine_configs)
-
+        self.name = ''
+        self.year = ''
     def back_league(self, event):
         text = event.message.text
         print('back_league', text)
@@ -72,12 +73,11 @@ class TocMachine(GraphMachine):
     def going_player(self, event):
         text = event.message.text
         print('going_player', text)
-        return text.lower() == 'player'
+        return text.lower() == 'player' #如果input是 player 就 return Ture 代表可以進入
 
     def on_enter_player(self, event): #Input the player name
         send_text_message(event.reply_token, '請輸入球員名稱')
-        text = event.message.text
-        return text.lower() == 'player'
+        return True
 
     def going_player_name(self, event):
         text = event.message.text
@@ -86,29 +86,32 @@ class TocMachine(GraphMachine):
 
     def on_enter_player_name(self, event): #Input the player name
         text = event.message.text
-        stat_ = get_player_stat(text)
-        stat_ = 0
-        if(type(stat_) == int):
+        print('name: ', text)
+        #stat_ = get_player_stat(text)
+        #stat_ = 0
+        if(text.isdigit() == True):
             send_text_message(event.reply_token, '查無此人, 請輸入正確名稱!')
-            return text.lower() == 'player_name'
-        return text.lower() == 'player_name'
+        else:
+            self.name = text
+            send_text_message(event.reply_token, '請輸入球季年份')
+            return True
 
     def going_player_year(self, event):
         text = event.message.text
-        print('going_player', text)
-        return text.lower() == 'player_year'
+        print('going_player_year', text)
+        if(self.name != ''):
+            return True
 
-    def on_enter_player_year(self, event): #Input the player name
-        name = event.message.text
-        send_text_message(event.reply_token, '請輸入球季年分')
+    def on_enter_player_year(self, event): #Input the player name\
+        name = self.name
+        print(name)
         year = event.message.text
-        if (type(year)== str):
-            send_text_message(event.reply_token, '錯誤年分')
-            return text.lower() == 'back_player_year'
+        print(year)
+        if(year.isdigit() == True):
+            send_text_message(event.reply_token, '查無此年, 請輸入正確名稱!')
+            return True
         ddd = (name, year) 
-        print('enter_player', text)
         print(ddd)
-        return True
         stat_ = get_player_stat(text)
         if(type(stat_) == int):
             send_text_message(event.reply_token, '查無此人, 請輸入正確名稱!')
@@ -121,9 +124,9 @@ class TocMachine(GraphMachine):
             send_flex_message(event.reply_token, msg_to_rep)
     
     def going_player_stat(self, event):
-        text = event.message.text
         print('going_player_stat', text)
-        return text.lower() == 'player_stat'
+        if (self.year.isdigit() == True):
+            return True
 
     def on_enter_player_stat(self, event): #Select player stats type
         text = event.message.text
@@ -156,7 +159,7 @@ class TocMachine(GraphMachine):
         return text.lower() =='team'
 
     def on_enter_team(self, event): #Choose which year's stat
-        send_text_message(event.reply_token, '請輸入球季年分')
+        send_text_message(event.reply_token, '請輸入球季年份')
         text = event.message.text 
         return text.lower() =='team'
 
