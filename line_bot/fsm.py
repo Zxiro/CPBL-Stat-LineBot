@@ -9,13 +9,16 @@ from linebot import LineBotApi, WebhookParser
 from linebot.models import MessageEvent, TextSendMessage, TextMessage, FlexSendMessage, ImageSendMessage
 from pandas.plotting import table 
 from .utils import send_text_message, send_image_url, send_flex_message, get_player_stat, get_team_stat, search_player
-from .msg_temp import show_pic, main_menu, table, show_team
-
+from .msg_temp import show_pic, main_menu, table, show_team, choose_game_type, intro
 class TocMachine(GraphMachine):
     def __init__(self, **machine_configs):
         self.machine = GraphMachine(model=self, **machine_configs)
         self.name = ''
         self.year = ''
+        self.game_year = ''
+        self.game_month = ''
+        self.game_day = ''
+        #self.
     def back_league(self, event):
         text = event.message.text
         print('back_league', text)
@@ -50,6 +53,15 @@ class TocMachine(GraphMachine):
         text = event.message.text
         print('back_player_year', text)
         return True
+
+    def going_intro(self, event):
+        text = event.message.text
+        return text.lower() == 'intro'
+
+    def on_enter_intro(self, event):
+        msg = intro()
+        msg_to_rep = FlexSendMessage("介紹", msg)
+        send_flex_message(event.reply_token, msg_to_rep)
 
     def on_enter_start(self, event):
         reply_token = event.reply_token
@@ -170,7 +182,6 @@ class TocMachine(GraphMachine):
         text = event.message.text
         print('enter_player_stat', text)
         send_text_message(event.reply_token, text)
-        
     
     def going_team(self, event):
         text = event.message.text
@@ -184,7 +195,7 @@ class TocMachine(GraphMachine):
 
     def going_team_year(self, event):
         text = event.message.text
-        print('enter_team_year', text)
+        print('going_team_year', text)
         return True
 
     def on_enter_team_year(self, event): #Show team stat
@@ -227,18 +238,35 @@ class TocMachine(GraphMachine):
         return text.lower() == 'league' 
 
     def on_enter_league(self, event): #
+        message = choose_game_type()
+        print(message)
+        msg_to_rep = FlexSendMessage("戰績選擇", message)
+        send_flex_message(event.reply_token, msg_to_rep)    
+    
+    def going_league_ordinary(self, event):
         text = event.message.text
-        print('enter_league', text)
-        send_text_message(event.reply_token, text)     
-
-    def going_league_yt(self, event):
+        print('going_ordinary', text)
+        return text.lower() == 'league_ordinary'
+    
+    def on_enter_league_ordinary(self, event):
         text = event.message.text
-        print('enter_league_yt', text)
-        return text.lower() == 'league_yt' 
-
-    def on_enter_league_yt(self, event): #Show team stat
+        print('enter_ordinary', text)
+        send_text_message(event.reply_token, '請輸入年份')
+        send_text_message(event.reply_token, '請輸入月份')
+        send_text_message(event.reply_token, '請輸入日')
+        pass
+    
+    def going_league_champion(self, event):
         text = event.message.text
-        print('enter_league_yt', text)
-        send_text_message(event.reply_token, text)
-
+        print('enter_champion', text)
+        return text.lower() == 'league_champion'
+    
+    def on_enter_league_champion(self, event):
+        pass
+    
+    def going_league_stat(self, event):
+        pass
+    
+    def on_enter_league_stat(self, event):
+        pass
     

@@ -69,7 +69,7 @@ def main_menu():
             "action": {
               "type": "message",
               "label": "介紹與說明",
-              "text": "功能介紹與說明"
+              "text": "intro"
             },
             "height": "md",
             "color": "#ff9900",
@@ -406,3 +406,69 @@ def show_team():
     }
   }
   return team
+
+def choose_game_type():
+  game_type = {
+      "type": "bubble",
+      "body":{
+      "type":"box",
+      "layout": "vertical",
+      "contents": [
+        {
+          "type": "button",
+          "action": {
+            "type": "message",
+            "label": "例行賽",
+            "text": "league_ordinary"
+          },
+          "height": "md",
+          "color": "#00cc66",
+          "style": "primary"
+        },
+        {
+          "type": "button",
+          "action": {
+            "type": "message",
+            "label": "冠軍賽",
+            "text": "league_champion"
+          },
+          "height": "md",
+          "color": "#00cc66",
+          "style": "primary"
+        }
+      ],
+      "spacing": "lg"
+      }
+  }
+  return game_type
+
+def intro():
+  intro = {
+      "type": "bubble",
+      "body":{
+      "type":"box",
+      "layout": "vertical",
+      "contents": [
+        {
+          "type": "text",
+          "text": "歡迎使用CPBLBot! jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj", 
+          "weight": "bold",
+          "size": "md",
+          "margin": "sm",
+        },
+        {
+          "type": "button",
+          "action": {
+            "type": "message",
+            "label": "回主選單",
+            "text": "start"
+          },
+          "height": "md",
+          "color": "#00cc66",
+          "style": "primary"
+        }
+      ],
+      "spacing": "lg"
+      }
+  }
+  return intro

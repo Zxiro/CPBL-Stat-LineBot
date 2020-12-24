@@ -39,7 +39,8 @@ def callback(req : HttpRequest):
         for event in events:
             if event.source.user_id not in machine:
                 machine[event.source.user_id] = TocMachine(
-                    states = ['start', 'fsm', 'player', 'player_year','player_name', 'team', 'team_year', 'league', 'league_yt'], 
+                    states = ['start', 'fsm', 'intro', 'player', 'player_year','player_name', 'team', 'team_year', 'league', 
+                    'league_ordinary', 'league_champion', 'league_stat'], 
                     transitions =[
                         { #start to fsm
                             "trigger" : "advance",
@@ -52,6 +53,12 @@ def callback(req : HttpRequest):
                             "source" : "start",
                             "dest" : "player",
                             "conditions" : "going_player"
+                        },
+                        { #options to player
+                            "trigger" : "advance",
+                            "source" : "start",
+                            "dest" : "intro",
+                            "conditions" : "going_intro"
                         },
                         { #options to player
                             "trigger" : "advance",
@@ -117,20 +124,32 @@ def callback(req : HttpRequest):
                             "trigger" : "advance",
                             "source" : "league",
                             "dest" : "league_yt",
-                            "conditions" : "going_league_yt"
-                        },                         
+                            "conditions" : "going_league"
+                        },
+                        { #team_year to team_stat
+                            "trigger" : "advance",
+                            "source" : "league",
+                            "dest" : "league_ordinary",
+                            "conditions" : "going_league_ordinary"
+                        },
+                        { #team_year to team_stat
+                            "trigger" : "advance",
+                            "source" : "league",
+                            "dest" : "league_champion",
+                            "conditions" : "going_league_champion"
+                        },
+                        { #team_year to team_stat
+                            "trigger" : "advance",
+                            "source" : ["league_champion","league_ordinary"],
+                            "dest" : "league_stat",
+                            "conditions" : "going_league_stat"
+                        },                        
                         { #options and fsm go back to start
                             "trigger" : "advance",
-                            "source" : ["start", "fsm", 'team','team_year', 'league','league_yt'
-                            , 'player'],
+                            "source" : ["start", "fsm", 'team','team_year', 'league'
+                            , 'player', 'intro'],
                             "dest" : "start",
                             "conditions" : "back_start"
-                        },
-                        { #options and fsm go back to start
-                            "trigger" : "advance",
-                            "source" : ["league_yt"],
-                            "dest" : "league",
-                            "conditions" : "back_league"
                         },
                         { #
                             "trigger" : "advance",
