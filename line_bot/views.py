@@ -40,7 +40,7 @@ def callback(req : HttpRequest):
             if event.source.user_id not in machine:
                 machine[event.source.user_id] = TocMachine(
                     states = ['start', 'fsm', 'intro', 'player', 'player_year','player_name', 'team', 'team_year', 'league', 
-                    'league_ordinary', 'league_champion', 'league_stat'], 
+                    'league_ordinary',  'league_stat'], 
                     transitions =[
                         { #start to fsm
                             "trigger" : "advance",
@@ -124,7 +124,7 @@ def callback(req : HttpRequest):
                             "trigger" : "advance",
                             "source" : "league",
                             "dest" : "league_yt",
-                            "conditions" : "going_league"
+                            "conditions" : "going_league_yt"
                         },
                         { #team_year to team_stat
                             "trigger" : "advance",
@@ -134,13 +134,7 @@ def callback(req : HttpRequest):
                         },
                         { #team_year to team_stat
                             "trigger" : "advance",
-                            "source" : "league",
-                            "dest" : "league_champion",
-                            "conditions" : "going_league_champion"
-                        },
-                        { #team_year to team_stat
-                            "trigger" : "advance",
-                            "source" : ["league_champion","league_ordinary"],
+                            "source" : ["league_ordinary"],
                             "dest" : "league_stat",
                             "conditions" : "going_league_stat"
                         },                        

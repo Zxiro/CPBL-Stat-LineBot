@@ -429,8 +429,8 @@ def choose_game_type():
           "type": "button",
           "action": {
             "type": "message",
-            "label": "冠軍賽",
-            "text": "league_champion"
+            "label": "Highlight",
+            "text": "league_yt"
           },
           "height": "md",
           "color": "#00cc66",

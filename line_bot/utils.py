@@ -1,5 +1,6 @@
 import os
 import pyimgur
+import scrapy
 import datetime as dt
 import matplotlib.pyplot as plt
 import requests as req
@@ -99,6 +100,24 @@ def get_team_stat(year):
     return df
 
 def get_game_stat(date):
+    #Get home page 
+    #Enter date data
+    #Press search code
+    headers = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36 Edg/87.0.664.60'}
+    res = req.get(
+        'https://www.playsport.cc/livescore.php?aid=6&gamedate='+'20201016'+'&mode=1',
+        headers = headers)
+    soup = BeautifulSoup(res.content, 'html.parser')
+    game_box = soup.find_all('div', {'class':'gamebox gamebox_on'})
+    table = soup.find('table', {'style':"margin:0 auto;"})
+    row = table.find_all('tr')#0 for team name 1 for score
+    names = row[0].find_all('span')
+    score = row[1].find_all('td', {'class':'big_score'})
+    t1 = names[0].text
+    t2 = names[1].text
+    t1_s = score[0].text
+    t2_s = score[1].text
+    print(t1, t1_s, t2, t2_s)
     pass
 
 def send_flex_message(reply_token, msg_to_rep):

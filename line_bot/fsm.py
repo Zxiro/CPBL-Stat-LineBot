@@ -8,7 +8,7 @@ from django.conf import settings
 from linebot import LineBotApi, WebhookParser
 from linebot.models import MessageEvent, TextSendMessage, TextMessage, FlexSendMessage, ImageSendMessage
 from pandas.plotting import table 
-from .utils import send_text_message, send_image_url, send_flex_message, get_player_stat, get_team_stat, search_player
+from .utils import send_text_message, send_image_url, send_flex_message, get_player_stat, get_team_stat, search_player, get_game_stat
 from .msg_temp import show_pic, main_menu, table, show_team, choose_game_type, intro
 class TocMachine(GraphMachine):
     def __init__(self, **machine_configs):
@@ -251,17 +251,18 @@ class TocMachine(GraphMachine):
     def on_enter_league_ordinary(self, event):
         text = event.message.text
         print('enter_ordinary', text)
-        send_text_message(event.reply_token, '請輸入年份')
-        send_text_message(event.reply_token, '請輸入月份')
-        send_text_message(event.reply_token, '請輸入日')
+        '''send_text_message(event.reply_token, '請輸入年份')'''
+        '''send_text_message(event.reply_token, '請輸入月份')
+        send_text_message(event.reply_token, '請輸入日')'''
+        get_game_stat('yy')
         pass
     
-    def going_league_champion(self, event):
+    def going_league_yt(self, event):
         text = event.message.text
-        print('enter_champion', text)
-        return text.lower() == 'league_champion'
+        print('enter_yt', text)
+        return text.lower() == 'league_yt'
     
-    def on_enter_league_champion(self, event):
+    def on_enter_league_yt(self, event):
         pass
     
     def going_league_stat(self, event):
