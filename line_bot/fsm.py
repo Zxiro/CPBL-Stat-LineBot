@@ -9,7 +9,7 @@ from linebot import LineBotApi, WebhookParser
 from linebot.models import MessageEvent, TextSendMessage, TextMessage, FlexSendMessage, ImageSendMessage
 from pandas.plotting import table 
 from .utils import send_text_message, send_image_url, send_flex_message, get_player_stat, get_team_stat, search_player, get_game_stat
-from .msg_temp import show_pic, main_menu, table, show_team, choose_game_type, intro
+from .msg_temp import show_pic, main_menu, table, show_team, choose_game_type, choose_return_type, intro
 class TocMachine(GraphMachine):
     def __init__(self, **machine_configs):
         self.machine = GraphMachine(model=self, **machine_configs)
@@ -18,7 +18,6 @@ class TocMachine(GraphMachine):
         self.game_year = ''
         self.game_month = ''
         self.game_day = ''
-        #self.
     def back_league(self, event):
         text = event.message.text
         print('back_league', text)
@@ -85,22 +84,29 @@ class TocMachine(GraphMachine):
     def going_player(self, event):
         text = event.message.text
         print('going_player', text)
-        return text.lower() == 'player' #如果input是 player 就 return Ture 代表可以進入
+        return text.lower() == 'player'or text.lower() == 'change_player' #如果input是 player 就 return True 代表可以進入
 
     def on_enter_player(self, event): #Input the player name
         send_text_message(event.reply_token, '請輸入球員名稱')
+        self.name = ''
         return True
 
     def going_player_name(self, event):
         text = event.message.text
         print('going_player_name', text)
-        return True
+        if(self.name == ''):
+            return True
+        if(self.name != '' and self.year == ''):
+            return text.lower() == 'change_year'
 
     def on_enter_player_name(self, event): #Input the player name
         text = event.message.text
         print('name: ', text)
+        if(self.name != ''):
+            send_text_message(event.reply_token, '請輸入球季年份')
+            return True
         name = search_player(text)
-        if(type(name)== int ):
+        if(type(name)== int):
             send_text_message(event.reply_token, '查無此人, 請輸入正確名稱!')
         else:
             self.name = text
@@ -110,7 +116,7 @@ class TocMachine(GraphMachine):
     def going_player_year(self, event):
         text = event.message.text
         print('going_player_year', text)
-        if(self.name != ''):
+        if(self.name != '' and self.year == ''):
             return True
 
     def on_enter_player_year(self, event): #Input the player name
@@ -171,18 +177,9 @@ class TocMachine(GraphMachine):
                 out_box['contents'].append(box)
             message["body"]["contents"][2]["contents"].append(out_box)
             msg_to_rep = FlexSendMessage(self.name + "數據", message)
+            self.year = ''
             send_flex_message(event.reply_token, msg_to_rep)
-    
-    def going_player_stat(self, event):
-        print('going_player_stat', text)
-        if (self.year.isdigit() == True):# 可以往下
-            return True
-
-    def on_enter_player_stat(self, event): #Select player stats type
-        text = event.message.text
-        print('enter_player_stat', text)
-        send_text_message(event.reply_token, text)
-    
+            
     def going_team(self, event):
         text = event.message.text
         print('enter_team', text)
@@ -239,7 +236,6 @@ class TocMachine(GraphMachine):
 
     def on_enter_league(self, event): #
         message = choose_game_type()
-        print(message)
         msg_to_rep = FlexSendMessage("戰績選擇", message)
         send_flex_message(event.reply_token, msg_to_rep)    
     
@@ -247,16 +243,94 @@ class TocMachine(GraphMachine):
         text = event.message.text
         print('going_ordinary', text)
         return text.lower() == 'league_ordinary'
-    
+
     def on_enter_league_ordinary(self, event):
         text = event.message.text
         print('enter_ordinary', text)
-        '''send_text_message(event.reply_token, '請輸入年份')'''
-        '''send_text_message(event.reply_token, '請輸入月份')
-        send_text_message(event.reply_token, '請輸入日')'''
-        get_game_stat('yy')
-        pass
+        send_text_message(event.reply_token, '請輸入年份')
     
+    def going_league_year(self, event):
+        text = event.message.text
+        print('going_year', text)
+        return True
+
+    def back_league_year(self, event):
+        text = event.message.text
+        print('back_year')
+        if(self.game_year == ''):
+            return True  #Depend on the line input
+
+    def on_enter_league_year(self, event):
+        text = event.message.text
+        print('enter_year', text)
+        self.game_year = text
+        if(self.game_year.isdigit() == False or len(self.game_year) != 4):
+            send_text_message(event.reply_token, '請重新輸入年份')
+            self.game_year = ''
+        else:
+            send_text_message(event.reply_token, '請輸入月份')
+            return True
+    
+    def going_league_month(self, event):
+        text = event.message.text
+        print('going_month', text)
+        if (self.game_year != ''):
+            return True
+        
+    def back_league_month(self, event):
+        print('back_month')
+        if(self.game_month == ''):
+            return True   
+
+    def on_enter_league_month(self, event):
+        text = event.message.text
+        print('enter_month', text)
+        self.game_month = text
+        if(self.game_month.isdigit() == False or int(self.game_month) > 12 or int(self.game_month) < 1):
+            send_text_message(event.reply_token, '請重新輸入月份')
+            self.game_month = ''
+        else:
+            send_text_message(event.reply_token, '請輸入日期')
+            return True
+        
+    def going_league_day(self, event):
+        text = event.message.text
+        print('going_day', text)
+        if(self.game_month != ''):
+            return True
+
+    def back_league_day(self, event):
+        print('back_day')
+        if(self.game_day == ''):
+            return True    
+
+    def on_enter_league_day(self, event):
+        text = event.message.text
+        print('enter_day', text)
+        self.game_day = text
+        if(self.game_day.isdigit() == False or int(self.game_day) > 31 or int(self.game_day) < 1):
+            send_text_message(event.reply_token, '請重新輸入日期')
+            self.game_day = ''
+        else:
+            stat = get_game_stat(self.game_year, self.game_month, self.game_day)
+            if(type(stat)==int):
+                print('None')
+                #send_text_message(event.reply_token, '此日期無比賽, 請重新輸入!')
+                message = choose_return_type()
+                msg_to_rep = FlexSendMessage("結果", message)
+                send_flex_message(event.reply_token, msg_to_rep)
+                self.game_year =''
+                self.game_month = ''
+                self.game_day = ''
+                #return True
+            else:
+                #show result
+                #return True
+                message = choose_return_type()
+                msg_to_rep = FlexSendMessage("結果", message)
+                send_flex_message(event.reply_token, msg_to_rep)
+                pass
+                
     def going_league_yt(self, event):
         text = event.message.text
         print('enter_yt', text)
@@ -265,9 +339,4 @@ class TocMachine(GraphMachine):
     def on_enter_league_yt(self, event):
         pass
     
-    def going_league_stat(self, event):
-        pass
-    
-    def on_enter_league_stat(self, event):
-        pass
     

@@ -236,7 +236,7 @@ def table():
           "action": {
             "type": "message",
             "label": "查看其他選手",
-            "text": "player"
+            "text": "change_player"
           }
         },
         {
@@ -245,7 +245,7 @@ def table():
           "action": {
             "type": "message",
             "label": "查看其他年份",
-            "text": "player_name"
+            "text": "change_year"
           }
         },
         {
@@ -472,3 +472,38 @@ def intro():
       }
   }
   return intro
+
+def choose_return_type():
+  return_type = {
+      "type": "bubble",
+      "body":{
+      "type":"box",
+      "layout": "vertical",
+      "contents": [
+        {
+          "type": "button",
+          "action": {
+            "type": "message",
+            "label": "主選單",
+            "text": "start"
+          },
+          "height": "md",
+          "color": "#00cc66",
+          "style": "primary"
+        },
+        {
+          "type": "button",
+          "action": {
+            "type": "message",
+            "label": "查看其他比賽",
+            "text": "league_ordinary"
+          },
+          "height": "md",
+          "color": "#00cc66",
+          "style": "primary"
+        }
+      ],
+      "spacing": "lg"
+      }
+  }
+  return return_type
