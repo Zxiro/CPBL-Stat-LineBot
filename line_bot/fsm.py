@@ -9,7 +9,7 @@ from linebot import LineBotApi, WebhookParser
 from linebot.models import MessageEvent, TextSendMessage, TextMessage, FlexSendMessage, ImageSendMessage
 from pandas.plotting import table 
 from .utils import send_text_message, send_image_url, send_flex_message, get_player_stat, get_team_stat, search_player, get_game_stat
-from .msg_temp import show_pic, main_menu, table, show_team, choose_game_type, choose_return_type, intro
+from .msg_temp import show_pic, main_menu, table, show_team, choose_game_type, return_button, intro, show_score
 class TocMachine(GraphMachine):
     def __init__(self, **machine_configs):
         self.machine = GraphMachine(model=self, **machine_configs)
@@ -25,8 +25,9 @@ class TocMachine(GraphMachine):
 
     def back_team_year(self, event):
         text = event.message.text
-        print('back_team_year', text)
-        return True
+        print('back_team', text)
+        if(text.lower() != 'start'):
+            return True
 
     def back_team(self, event):
         text = event.message.text
@@ -51,7 +52,8 @@ class TocMachine(GraphMachine):
     def back_player_year(self, event):
         text = event.message.text
         print('back_player_year', text)
-        return True
+        if(text.lower() != 'start'):
+            return True
 
     def going_intro(self, event):
         text = event.message.text
@@ -187,8 +189,6 @@ class TocMachine(GraphMachine):
 
     def on_enter_team(self, event): #Choose which year's stat
         send_text_message(event.reply_token, '請輸入球季年份')
-        text = event.message.text 
-        return text.lower() =='team'
 
     def going_team_year(self, event):
         text = event.message.text
@@ -199,35 +199,56 @@ class TocMachine(GraphMachine):
         text = event.message.text
         print('enter_team_year', text)
         stat_ = get_team_stat(text) #Imgur Link
-        if(type(stat_)== int and stat_ == 1):
+        if(type(stat_)==int and stat_ == 1):
             send_text_message(event.reply_token, '請輸入正確年份')
-            return text.lower() == 'team_year'
-        if(type(stat_)== int and stat_ == 2):
+            return True
+        if(type(stat_)==int and stat_ == 2):
             send_text_message(event.reply_token, '查無資料, 請重新輸入!')
-            return text.lower() == 'team_year'
-        stat_.drop(['Rank', 'PCT', 'GB', 'Home', 'Away'], inplace = True,  axis=1)
-        message = show_team()
-        for i in range(4):
-            tmp_list = stat_.loc[i].tolist()
-            print(tmp_list)
-            data = {
-                "type": "box",
-                "layout": "horizontal",
-                "contents": []
-             }
-            for j in range(len(tmp_list)):
-                detail_data = {
-                    "type": "text",
-                    "text": tmp_list[j],
-                    "size": "sm",
-                    "color": "#555555",
-                    "flex": 1,
-                    "margin": "md"
-                } 
-                data['contents'].append(detail_data)
-            message["body"]["contents"][4]["contents"].append(data)
-        msg_to_rep = FlexSendMessage("球隊戰績", message)
-        send_flex_message(event.reply_token, msg_to_rep) 
+            return True
+        else:
+            stat_.drop(['RKS', 'PCT', 'GB', 'HOME', 'AWAY'], inplace = True,  axis=1)
+            print(stat_)
+            message = show_team()
+            data_ = {
+                    "type": "box",
+                    "layout": "horizontal",
+                    "contents": []
+                }
+            for i in range(0, len(stat_.columns)):
+                print('col', stat_.columns[i])
+                text = {
+                  "type": "text",
+                  "text": stat_.columns[i],
+                  "size": "sm",
+                  'margin':'sm',
+                  "color": "#555555",
+                  "flex": 1,
+                }
+                data_['contents'].append(text)
+            print("_", data_)
+            message["body"]["contents"][2]["contents"].append(data_)
+            for i in range(len(stat_.columns)-3):
+                tmp_list = stat_.loc[i].tolist()
+                #print(tmp_list)
+                data = {
+                    "type": "box",
+                    "layout": "horizontal",
+                    "contents": []
+                }
+                for j in range(len(tmp_list)):
+                    #print(tmp_list[j])
+                    detail_data = {
+                        "type": "text",
+                        "text": tmp_list[j],
+                        "size": "sm",
+                        "color": "#555555",
+                        "flex": 1,
+                        "margin": "md"
+                    } 
+                    data['contents'].append(detail_data)
+                message["body"]["contents"][4]["contents"].append(data)
+            msg_to_rep = FlexSendMessage("球隊戰績", message)
+            send_flex_message(event.reply_token, msg_to_rep)
 
     def going_league(self, event):
         text = event.message.text
@@ -301,6 +322,8 @@ class TocMachine(GraphMachine):
 
     def back_league_day(self, event):
         print('back_day')
+        if(event.message.text.lower() != 'start'):
+            return True
         if(self.game_day == ''):
             return True    
 
@@ -316,20 +339,75 @@ class TocMachine(GraphMachine):
             if(type(stat)==int):
                 print('None')
                 #send_text_message(event.reply_token, '此日期無比賽, 請重新輸入!')
-                message = choose_return_type()
+                message = return_button()
                 msg_to_rep = FlexSendMessage("結果", message)
                 send_flex_message(event.reply_token, msg_to_rep)
                 self.game_year =''
                 self.game_month = ''
                 self.game_day = ''
-                #return True
+                return True
             else:
-                #show result
-                #return True
-                message = choose_return_type()
+                message = show_score()
+                out_box = {
+                    'type':'box',
+                    "layout": "vertical",
+                    'contents':[
+                    ]
+                }
+                for i in range(len(stat['t1'])):
+                    for k in range(2):
+                        in_box = {
+                        'type':'box',
+                        "layout": "horizontal",
+                        'contents':[
+                        ]
+                        }
+                        if(k==0):
+                            text = {
+                                "type": "text",
+                                "text": stat['t1'][i],
+                                "align": "center",
+                                "weight": "bold",
+                                "size": "md",
+                                "color": "#555555",
+                                "flex" : 1
+                            }
+                            in_box['contents'].append(text)
+                            text = {
+                                "type": "text",
+                                "text": stat['t2'][i],
+                                "align": "center",
+                                "weight": "bold",
+                                "size": "md",
+                                "color": "#555555",
+                                "flex" : 1
+                            }
+                            in_box['contents'].append(text)
+                        if(k==1):
+                            text = {
+                                "type": "text",
+                                "text": stat['t1_s'][i],
+                                "align": "center",
+                                "size": "xl",
+                                "color": "#111111",
+                                "flex" : 1
+                            }
+                            in_box['contents'].append(text)
+                            text = {
+                                "type": "text",
+                                "text": stat['t2_s'][i],
+                                "align": "center",
+                                "size": "xl",
+                                "color": "#111111",
+                                "flex" : 1
+                            }
+                            in_box['contents'].append(text)
+                        out_box['contents'].append(in_box)
+                message['body']['contents'][2]['contents'].append(out_box)
                 msg_to_rep = FlexSendMessage("結果", message)
                 send_flex_message(event.reply_token, msg_to_rep)
-                pass
+                return True
+                
                 
     def going_league_yt(self, event):
         text = event.message.text

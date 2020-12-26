@@ -104,7 +104,7 @@ def callback(req : HttpRequest):
                         },
                         { #options to team
                             "trigger" : "advance",
-                            "source" : "start",
+                            "source" : ["start",'team_year'],
                             "dest" : "team",
                             "conditions" : "going_team"
                         },
@@ -113,6 +113,12 @@ def callback(req : HttpRequest):
                             "source" : "team",
                             "dest" : "team_year",
                             "conditions" : "going_team_year"
+                        },
+                        { #team_year to team_stat
+                            "trigger" : "advance",
+                            "source" : "team_year",
+                            "dest" : "team_year",
+                            "conditions" : "back_team_year"
                         },
                         { #
                             "trigger" : "advance",
@@ -172,15 +178,9 @@ def callback(req : HttpRequest):
                         { #options and fsm go back to start
                             "trigger" : "advance",
                             "source" : ["start", "fsm", 'team','team_year', 'league'
-                            , 'league_day', 'player', 'intro'],
+                            , 'league_day', 'player','player_year', 'intro'],
                             "dest" : "start",
                             "conditions" : "back_start"
-                        },
-                        { #
-                            "trigger" : "advance",
-                            "source" : "team_year",
-                            "dest" : "team_year",
-                            "conditions" : "back_team_year"
                         },
                     ],
                     initial="start", #init needs to be start can use this para to debug

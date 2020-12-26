@@ -67,7 +67,6 @@ def get_player_stat(name, year):
         break
     df = df.replace('\n','\r', regex=True)
     df = df.replace('\t', regex=True)
-    print(df)
     stat_list = df.loc[df['Year'] == year]
     stat_list.reset_index(inplace = True)
     print(stat_list)
@@ -85,7 +84,12 @@ def get_team_stat(year):
     if (len(tables) != 3):
         return 2
     stat_table  = tables[2] #Last table
-    col = ['Rank', 'Team', 'Game', 'W-T-L', 'PCT', 'GB', 'Fubon', 'Lamigo', 'Brothers', 'Uni-lion', 'Home', 'Away']
+    col = []
+    col_name = stat_table.find_all('th', {'align':'center'})
+
+    for n in col_name:
+        col.append(n.text)
+    print(col)
     data = []
     stat_data = stat_table.find_all('td', {'align':'center'})
     df = pd.DataFrame(columns = col)
@@ -115,21 +119,28 @@ def get_game_stat(year, month, day):
         headers = headers)
     soup = BeautifulSoup(res.content, 'html.parser')
     #print(soup)
-    pass
-    game_box = soup.find_all('div', {'class':'gamebox gamebox_on'})
-    if(len(game_box) == 0):
+    stat = {
+        't1':[],
+        't1_s':[],
+        't2':[],
+        't2_s':[]
+    }
+    outer = soup.find_all('div', {'class':'outer-gamebox'})
+    if(len(outer) == 0):
         return 0
     else:
-        table = soup.find('table', {'style':"margin:0 auto;"})
-        row = table.find_all('tr')#0 for team name 1 for score
-        names = row[0].find_all('span')
-        score = row[1].find_all('td', {'class':'big_score'})
-        t1 = names[0].text
-        t2 = names[1].text
-        t1_s = score[0].text
-        t2_s = score[1].text
-        print(t1, t1_s, t2, t2_s)
-        pass
+        print(len(outer))
+        for game in outer:
+            game_box = game.find('div', {'class':'gamebox gamebox_on'})
+            table = game_box.find('table', {'style':"margin:0 auto;"})
+            row = table.find_all('tr')#0 for team name 1 for score
+            names = row[0].find_all('span')
+            score = row[1].find_all('td', {'class':'big_score'})
+            stat['t1'].append(names[0].text)
+            stat['t2'].append(names[1].text)
+            stat['t1_s'].append(score[0].text)
+            stat['t2_s'].append(score[1].text)
+    return stat            
 
 def send_flex_message(reply_token, msg_to_rep):
     line_bot_api = LineBotApi(channel_access_token)

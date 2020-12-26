@@ -289,72 +289,7 @@ def show_team():
         {
           "type": "box",
           "layout": "horizontal",
-          "margin": "sm",
-          "spacing": "sm",
           "contents": [
-            {
-              "type": "box",
-              "layout": "horizontal",
-              "contents": [
-                {
-                  "type": "text",
-                  "text": "Team",
-                  "size": "md",
-                  "color": "#555555",
-                  "flex": 1,
-                  "margin": "lg"
-                },
-                {
-                  "type": "text",
-                  "text": "Game",
-                  "size": "md",
-                  "color": "#555555",
-                  "flex": 1,
-                  "margin": "lg"
-                },
-                {
-                  "type": "text",
-                  "text": "W-T-L",
-                  "size": "md",
-                  "color": "#555555",
-                  "flex": 1,
-                  "margin": "lg"
-                },
-
-                {
-                  "type": "text",
-                  "text": "富邦",
-                  "size": "lg",
-                  "color": "#555555",
-                  "flex": 1,
-                  "margin": "lg"
-                },
-                {
-                  "type": "text",
-                  "text": "Lamigo",
-                  "size": "md",
-                  "color": "#555555",
-                  "flex": 1,
-                  "margin": "lg"
-                },
-                {
-                  "type": "text",
-                  "text": "中信兄弟",
-                  "size": "md",
-                  "color": "#555555",
-                  "flex": 1,
-                  "margin": "lg"
-                },
-                {
-                  "type": "text",
-                  "text": "統一獅",
-                  "size": "md",
-                  "color": "#555555",
-                  "flex": 1,
-                  "margin": "lg"
-                },
-              ]
-            },
           ]
         },
         {
@@ -474,6 +409,7 @@ def intro():
   return intro
 
 def choose_return_type():
+
   return_type = {
       "type": "bubble",
       "body":{
@@ -507,3 +443,103 @@ def choose_return_type():
       }
   }
   return return_type
+
+def show_score():
+  score = {
+    "type": "bubble",
+    "size" : "giga", 
+    "body": {
+      "type": "box",
+      "layout": "vertical",
+      "contents": [
+        {
+          "type": "text",
+          "text": "戰況",
+          "weight": "bold",
+          "size": "md",
+          "margin": "sm"
+        },
+        {
+          "type": "separator",
+          "margin": "sm"
+        },
+        {
+          "type": "box",
+          "layout": "vertical",
+          "margin": "sm",
+          "spacing": "sm",
+          "contents": [
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "box",
+      "layout": "vertical",
+      "contents": [
+        {
+          "type": "button",
+          "style": "primary",
+          "action": {
+            "type": "message",
+            "label": "查詢其他日期",
+            "text": "league_ordinary"
+          }
+        },
+        {
+          "type": "separator",
+          "margin": "sm"
+        },
+        {
+          "type": "button",
+          "style": "primary",
+          "action": {
+            "type": "message",
+            "label": "返回主選單",
+            "text": "start"
+          }
+        }
+      ]
+    },
+    "styles": {
+      "footer": {
+        "separator": True
+      }
+    }
+  }
+  return score
+
+def return_button():
+  return_button = {
+      "type": "bubble",
+      "body":{
+      "type":"box",
+      "layout": "vertical",
+      "contents": [
+        {
+          "type": "button",
+          "action": {
+            "type": "message",
+            "label": "查看其他日期",
+            "text": "league_ordinary"
+          },
+          "height": "md",
+          "color": "#00cc66",
+          "style": "primary"
+        },
+        {
+          "type": "button",
+          "action": {
+            "type": "message",
+            "label": "主選單",
+            "text": "start"
+          },
+          "height": "md",
+          "color": "#00cc66",
+          "style": "primary"
+        }
+      ],
+      "spacing": "lg"
+      }
+  }
+  return return_button
