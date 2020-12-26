@@ -7,7 +7,7 @@ def show_pic():
         "size": "giga",
         "hero": {
           "type": "image",
-          "url": "https://i.imgur.com/bVjkU07.png",
+          "url": "https://i.imgur.com/HoIFRS9.png",
           "aspectMode": "fit",
           "size": "full",
           "aspectRatio": "2:1"
@@ -21,7 +21,7 @@ def show_pic():
               "action": {
                 "type": "uri",
                 "label": "Go for the full picture",
-                "uri": "https://i.imgur.com/bVjkU07.png"
+                "uri": "https://i.imgur.com/HoIFRS9.png"
               },
               "height": "md",
               "color": "#5cd65c",
@@ -386,8 +386,7 @@ def intro():
       "contents": [
         {
           "type": "text",
-          "text": "歡迎使用CPBLBot! jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj", 
-          "weight": "bold",
+          "text": "功能開發中, 敬請期待!", 
           "size": "md",
           "margin": "sm",
         },

@@ -39,7 +39,7 @@ def callback(req : HttpRequest):
         for event in events:
             if event.source.user_id not in machine:
                 machine[event.source.user_id] = TocMachine(
-                    states = ['start', 'fsm', 'intro', 'player', 'player_year','player_name', 'team', 'team_year', 'league', 
+                    states = ['start', 'fsm', 'intro', 'player', 'player_year','player_name', 'team', 'team_year', 'league', 'league_yt',
                     'league_ordinary', 'league_year', 'league_month', 'league_day'], 
                     transitions =[
                         { #start to fsm
@@ -177,7 +177,7 @@ def callback(req : HttpRequest):
                               
                         { #options and fsm go back to start
                             "trigger" : "advance",
-                            "source" : ["start", "fsm", 'team','team_year', 'league'
+                            "source" : ["start", "fsm", 'team','team_year', 'league', 'league_yt'
                             , 'league_day', 'player','player_year', 'intro'],
                             "dest" : "start",
                             "conditions" : "back_start"

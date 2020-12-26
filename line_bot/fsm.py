@@ -60,10 +60,9 @@ class TocMachine(GraphMachine):
         return text.lower() == 'intro'
 
     def on_enter_intro(self, event):
-        msg = intro()
-        msg_to_rep = FlexSendMessage("介紹", msg)
-        send_flex_message(event.reply_token, msg_to_rep)
-
+        send_text_message(event.reply_token, '歡迎使用CPBL - Stat bot! \n 你可以藉由輸入不同指令來獲得資訊 \n 在主選單輸入以下資訊: \n player : 獲取球員資料 \n league : 獲取對戰資料 \n team : 獲取球季資料 \n intro : 再看一次指令集 \n fsm : 獲取有限狀態機圖 \n 輸入start來開始使用!' )
+        return event.message.text.lower() == 'intro'
+        
     def on_enter_start(self, event):
         reply_token = event.reply_token
         msg = main_menu()
@@ -415,6 +414,9 @@ class TocMachine(GraphMachine):
         return text.lower() == 'league_yt'
     
     def on_enter_league_yt(self, event):
-        pass
+        message = intro()
+        msg_to_rep = FlexSendMessage("回覆", message)
+        send_flex_message(event.reply_token, msg_to_rep)
+        return text.lower() == 'league_yt'
     
     
