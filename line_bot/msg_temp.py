@@ -179,7 +179,7 @@ def main_menu():
             "type": "button",
             "action": {
               "type": "message",
-              "label": "ˇ對戰數據",
+              "label": "對戰數據",
               "text": "league"
             },
             "height": "md",

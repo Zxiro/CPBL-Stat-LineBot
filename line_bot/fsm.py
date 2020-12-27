@@ -321,8 +321,8 @@ class TocMachine(GraphMachine):
 
     def back_league_day(self, event):
         print('back_day')
-        if(event.message.text.lower() != 'start'):
-            return True
+        if(event.message.text == 'start'):
+            return False
         if(self.game_day == ''):
             return True    
 
@@ -362,6 +362,8 @@ class TocMachine(GraphMachine):
                         ]
                         }
                         if(k==0):
+                            if(stat['t1'][i] == ''):
+                                stat['t1'][i] = 'NaN'
                             text = {
                                 "type": "text",
                                 "text": stat['t1'][i],
@@ -372,6 +374,8 @@ class TocMachine(GraphMachine):
                                 "flex" : 1
                             }
                             in_box['contents'].append(text)
+                            if(stat['t2'][i] == ''):
+                                stat['t2'][i] = 'NaN'
                             text = {
                                 "type": "text",
                                 "text": stat['t2'][i],
@@ -383,6 +387,8 @@ class TocMachine(GraphMachine):
                             }
                             in_box['contents'].append(text)
                         if(k==1):
+                            if(stat['t1_s'][i] == ''):
+                                stat['t1_s'][i] = 'NaN'
                             text = {
                                 "type": "text",
                                 "text": stat['t1_s'][i],
@@ -392,6 +398,8 @@ class TocMachine(GraphMachine):
                                 "flex" : 1
                             }
                             in_box['contents'].append(text)
+                            if(stat['t2_s'][i] == ''):
+                                stat['t2_s'][i] = 'NaN'
                             text = {
                                 "type": "text",
                                 "text": stat['t2_s'][i],
